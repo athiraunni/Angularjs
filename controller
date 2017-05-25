@@ -1,0 +1,82 @@
+var GHController = angular.module('GHController', []);
+
+GHController.controller('LoginCtrl', function($scope, $rootScope, $location, $http) {
+	//fetch users.json here
+
+	$http.get("data/users.json")
+			.then(function(response) {
+				$scope.users = response.data;
+				console.log($scope.users.length);
+			})
+	//validation function
+    $scope.validate = function() {
+			var f1=true;
+			for(i=0;i<$scope.users.length;i++){
+				if($scope.username==$scope.users[i].username  && $scope.password==$scope.users[i].password){
+					f1=false;
+					alert("Welcome "+$scope.username);
+					$location.path('/home');
+					$rootScope.uname=$scope.users[i].name;
+					console.log($scope.users[i].username);
+				}
+			}
+			if(f1==true){
+				alert("Invalid credentials..!");
+			}
+		}
+	});
+
+GHController.controller('BookingCtrl', function($scope, $rootScope, $location, $http) {
+    $scope.name=$rootScope.uname;
+		$scope.bookingArray=[];
+		//fetch bookings.json here
+		$http.get("data/bookings.json")
+			.then(function(response) {
+				$scope.booking = response.data;
+				var i, l = response.data.length;
+		        for(i = 0; i < l; i++){
+				    if( response.data[i].name ==$rootScope.uname ){
+						 $scope.bookingArray.push(response.data[i]);
+						 // your fetch code here
+				 	}
+		   		}
+			})
+
+    $scope.showBookings=function(){
+	//use this empty array to create the bookings list for the logged in user.
+		$rootScope.specificBooking=[];
+	
+   		for(i=0;i<$scope.bookingArray.length;i++){
+   			//Insert each entry from a loop, using push function
+			$scope.specificBooking.push($scope.bookingArray[i]);
+		}
+
+	
+	}
+
+	$scope.book = function(){
+
+		//code for generating a new booking ID for a new booking
+        var bookingId=Number(Math.floor(Math.random()*10000));
+        this.bookingId=$scope.bookingId;
+		this.name=$scope.name;
+		this.fromDate=$scope.from;
+		this.toDate=$scope.to;
+		this.guests=$scope.guests;
+		this.rooms=$scope.rooms;
+		
+		var Booking = function(bookingId, name, from, to, guests, rooms){
+			this.bookingId = bookingId,
+			this.name = name,
+			this.fromDate = from,
+			this.toDate = to,
+			this.guests = guests,
+			this.rooms = rooms
+		}
+
+		//instantiate the new booking object and push it into specificBooking[]
+		var new_booking = new Booking(bookingId,$scope.name,$scope.from,$scope.to,$scope.guests,$scope.rooms)
+		alert("New Booking : Your Booking Id is "+bookingId+" , From : "+$scope.from+" , To : "+$scope.to+" , No of guests : "+$scope.guests+"No. of rooms : "+$scope.rooms);
+		$rootScope.specificBooking.push(new_booking);
+	}
+});
