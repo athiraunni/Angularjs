@@ -25,6 +25,6 @@ guestHouseApp.config(function($routeProvider) {
 			controller:'BookingCtrl'
         }).
         otherwise({
-            redirectTo: '/login'
+            redirectTo: '/main'
         });
     });
