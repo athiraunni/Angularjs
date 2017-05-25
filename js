@@ -1,65 +1,62 @@
+var GHController = angular.module('GHController', []);
 
-var vehicleApp = angular.module('vehicleApp', []);
-
-vehicleApp.controller('VehicleListCtrl', function ($scope, $http) {
-    //initialize the ng-show variables
-    $scope.showList=false;
-    $scope.showDetail=false;
-    //implement the function definitions here for the button click
-    $scope.showTwoWheelers=function(a){
-        if(a==2){
-            $scope.vehicleList=$scope.two;
-            $scope.showList=true;
-            $scope.showDetail=false;
-            $scope.vehicleType="twoWheeler";
-        }
-    }
-    $scope.showFourWheelers=function(b){
-        if(b==4){
-            $scope.vehicleList=$scope.four;
-            $scope.showList=true;
-            $scope.showDetail=false;
-            $scope.vehicleType="fourWheeler";
-        }
-    }
-    //store the type of the vehicle in scope variable
-    $scope.vehicleType="";
-    //make Ajax call to JSON file and populate the vehicleList
-    $http.get("data/twoWheeler.json")
+GHController.controller('LoginCtrl', function($scope, $rootScope, $location, $http) {
+	//fetch users.json here
+    $http.get("data/users.json")
         .then(function(response) {
-            $scope.two = response.data;
-
+        	$scope.users=response.data;
+        	console.log($scope.users);
         });
 
-    $http.get("data/fourWheeler.json")
+    $scope.validate = function() {
+    	var f1=true;
+    	for(i=0;i<$scope.users.length;i++){
+    		// alert("entered");
+    		if($scope.username==$scope.users[i].username && $scope.password==$scope.users[i].password){
+    			f1=false;
+    			alert("entered!!");
+    			$location.path("/home");
+    			$rootScope.name=$scope.users[i].name;
+    		}
+    	}
+    	if(f1==true){
+    		alert("Invalid credentials..!");
+    	}
+	};
+});
+
+GHController.controller('BookingCtrl', function($scope, $rootScope, $location, $http) {
+    //fetch bookings.json here
+	$http.get("data/booking.json")
         .then(function(response) {
-            $scope.four = response.data;
-            
+        	$scope.booking=response.data;
+
+        	for(i=0;i<$scope.booking.length;i++){
+        		alert("new booking");
+        		if(response.data[i].name==$rootScope.name){
+        			$scope.newBook=response.data[i];
+        		}
+        	}
         });
-
-    $scope.showDetails = function (vehicle) {
-        // console.log("hii")
-        //show/hide the divs accordingly
-         $scope.showDetail=true;
-        $scope.showList=false;
-        $scope.current=vehicle; 
-        //check the scope variable type and populate the vehicle image accordingly
-       if($scope.vehicleType=="fourWheeler"){
-            $scope.myImg="imgs/car.jpg";
-       }
-       else if($scope.vehicleType=="twoWheeler"){
-            $scope.myImg="imgs/bike.jpg";
-       }
-    }
-        
-});
-
-$(function(){
-    //use jQuery selector to get the app title
-    $('#home').click(function() {
-         //assign click event and redirect to home page
-    window.location.reload();
-    });
-});
     
+    $scope.showBookings=function(){
+
+	//use this empty array to create the bookings list for the logged in user.
+		$rootScope.specificBooking=[];
+		
+	//Insert each entry from a loop, using push function
+		for(i=0;i<$scope.newBook.length;i++){
+			$rootScope.specificBooking.push(newBook[i]);
+		}
+}
+
+	$scope.book = function(){
+	
+		//code for generating a new booking ID for a new booking
+        var bookingId=Number(Math.floor(Math.random()*10000));
+		
+		// use constructor/prototype to initialize the new booking object property
    
+		//instantiate the new booking object and push it into specificBooking[]
+	}
+});
