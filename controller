@@ -1,5 +1,6 @@
 var GHController = angular.module('GHController', []);
 
+//Login controller
 GHController.controller('LoginCtrl', function($scope, $rootScope, $location, $http) {
 	//fetch users.json here
 
@@ -14,7 +15,7 @@ GHController.controller('LoginCtrl', function($scope, $rootScope, $location, $ht
 			for(i=0;i<$scope.users.length;i++){
 				if($scope.username==$scope.users[i].username  && $scope.password==$scope.users[i].password){
 					f1=false;
-					alert("Welcome "+$scope.username);
+					// alert("Welcome "+$scope.username);
 					$location.path('/home');
 					$rootScope.uname=$scope.users[i].name;
 					console.log($scope.users[i].username);
@@ -26,6 +27,7 @@ GHController.controller('LoginCtrl', function($scope, $rootScope, $location, $ht
 		}
 	});
 
+//Booking controller
 GHController.controller('BookingCtrl', function($scope, $rootScope, $location, $http) {
     $scope.name=$rootScope.uname;
 		$scope.bookingArray=[];
@@ -64,7 +66,7 @@ GHController.controller('BookingCtrl', function($scope, $rootScope, $location, $
 		this.toDate=$scope.to;
 		this.guests=$scope.guests;
 		this.rooms=$scope.rooms;
-		
+
 		var Booking = function(bookingId, name, from, to, guests, rooms){
 			this.bookingId = bookingId,
 			this.name = name,
@@ -76,7 +78,13 @@ GHController.controller('BookingCtrl', function($scope, $rootScope, $location, $
 
 		//instantiate the new booking object and push it into specificBooking[]
 		var new_booking = new Booking(bookingId,$scope.name,$scope.from,$scope.to,$scope.guests,$scope.rooms)
-		alert("New Booking : Your Booking Id is "+bookingId+" , From : "+$scope.from+" , To : "+$scope.to+" , No of guests : "+$scope.guests+"No. of rooms : "+$scope.rooms);
-		$rootScope.specificBooking.push(new_booking);
+		if($scope.from==null || $scope.to==null || $scope.guests==null || $scope.rooms==null){
+			alert("Kindly fill all fields");
+		}
+		else{
+			alert("Booking Success! Here's the summary : Booking Id for "+$scope.name+"'s booking is "+bookingId+" and "+$scope.rooms+" room(s) are booked between "+$scope.from+" and "+$scope.to);
+			$rootScope.specificBooking.push(new_booking);
+		}
 	}
 });
+
